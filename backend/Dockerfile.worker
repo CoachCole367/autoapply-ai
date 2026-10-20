@@ -1,0 +1,8 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY pyproject.toml ./
+COPY src ./src
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN pip install --no-cache-dir . && playwright install --with-deps chromium && chmod -R a+rX /ms-playwright && useradd --uid 10001 --create-home app && mkdir /data && chown app /data
+USER app
+CMD ["python", "-m", "autoapply.worker"]
